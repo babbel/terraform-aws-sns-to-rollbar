@@ -11,14 +11,14 @@ module "sns-to-rollbar" {
 
   name = "example"
 
-  environment = "test"
-  level      = "debug"
-
   json_key = "message"
 
   rollbar_project_access_token = {
     access_token = "some-token"
   }
+
+  environment = "test"
+  level      = "debug"
 
   tags = {
     app = "some-service"
