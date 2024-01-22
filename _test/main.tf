@@ -8,7 +8,7 @@ module "athena" {
   name = "example"
 
   environment = "test"
-  level = "debug"
+  level       = "debug"
 
   json_key = "message"
 

@@ -131,9 +131,9 @@ resource "aws_sfn_state_machine" "this" {
 
               Choices = [
                 {
-                  Variable = "$.message"
+                  Variable      = "$.message"
                   StringMatches = "{*}"
-                  Next = "ParseJSON"
+                  Next          = "ParseJSON"
                 },
               ]
 

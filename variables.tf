@@ -41,7 +41,7 @@ EOS
 }
 
 variable "tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 
   description = <<EOS
