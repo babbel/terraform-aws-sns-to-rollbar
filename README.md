@@ -22,7 +22,7 @@ module "sns-to-rollbar" {
 
   tags = {
     app = "some-service"
-    env = "production"
+    env = "test"
   }
 }
 ```

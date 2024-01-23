@@ -2,7 +2,7 @@ provider "aws" {
   region = "local"
 }
 
-module "athena" {
+module "sns-to-rollbar" {
   source = "./.."
 
   name = "example"
@@ -18,6 +18,6 @@ module "athena" {
 
   tags = {
     app = "some-service"
-    env = "production"
+    env = "test"
   }
 }
