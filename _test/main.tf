@@ -1,13 +1,9 @@
-# AWS SNS to Rollbar
+provider "aws" {
+  region = "local"
+}
 
-Terraform module which allows posting SNS messages to Rollbar
-
-## Usage
-
-```tf
 module "sns-to-rollbar" {
-  source  = "babbel/sns-to-rollbar/aws"
-  version = "~> 1.0"
+  source = "./.."
 
   name = "example"
 
@@ -18,11 +14,10 @@ module "sns-to-rollbar" {
   }
 
   environment = "test"
-  level      = "debug"
+  level       = "debug"
 
   tags = {
     app = "some-service"
     env = "test"
   }
 }
-```
