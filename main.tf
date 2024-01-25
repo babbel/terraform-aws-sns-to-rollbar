@@ -128,7 +128,7 @@ resource "aws_sfn_state_machine" "this" {
           States = merge(
             (
               var.json_key != "-" ?
-              {
+              tomap({
                 IsJSON = {
                   Type = "Choice"
 
@@ -173,8 +173,8 @@ resource "aws_sfn_state_machine" "this" {
 
                   Next = "PostItem"
                 }
-              } :
-              {}
+              }) :
+              tomap({})
             ),
 
             {
