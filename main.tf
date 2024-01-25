@@ -123,95 +123,104 @@ resource "aws_sfn_state_machine" "this" {
         Type = "Map"
 
         ItemProcessor = {
-          StartAt = "IsJSON"
+          StartAt = var.json_key != "-" ? "IsJSON" : "DontParseJSON"
 
-          States = {
-            IsJSON = {
-              Type = "Choice"
+          States = merge(
+            (
+              var.json_key != "-" ?
+              {
+                IsJSON = {
+                  Type = "Choice"
 
-              Choices = [
-                {
-                  Variable      = "$.message"
-                  StringMatches = "{*}"
-                  Next          = "ParseJSON"
-                },
-              ]
+                  Choices = [
+                    {
+                      Variable      = "$.message"
+                      StringMatches = "{*}"
+                      Next          = "ParseJSON"
+                    },
+                  ]
 
-              Default = "DontParseJSON"
-            }
-
-            ParseJSON = {
-              Type = "Pass"
-
-              Parameters = {
-                "message.$" = "States.StringToJson($.message)"
-              }
-
-              Next = "FindBody"
-            }
-
-            FindBody = {
-              Type = "Pass"
-
-              Parameters = {
-                "body.$" = "$.message['${var.json_key}']"
-              }
-              ResultPath = "$.overrides"
-
-              Next = "MergeBody"
-            }
-
-            MergeBody = {
-              Type = "Pass"
-
-              Parameters = {
-                "message.$" = "States.JsonMerge($.message, $.overrides, false)"
-              }
-
-              Next = "PostItem"
-            }
-
-            DontParseJSON = {
-              Type = "Pass"
-
-              Parameters = {
-                "message" = {
-                  "body.$" = "$.message"
+                  Default = "DontParseJSON"
                 }
+
+                ParseJSON = {
+                  Type = "Pass"
+
+                  Parameters = {
+                    "message.$" = "States.StringToJson($.message)"
+                  }
+
+                  Next = "FindBody"
+                }
+
+                FindBody = {
+                  Type = "Pass"
+
+                  Parameters = {
+                    "body.$" = "$.message['${var.json_key}']"
+                  }
+                  ResultPath = "$.overrides"
+
+                  Next = "MergeBody"
+                }
+
+                MergeBody = {
+                  Type = "Pass"
+
+                  Parameters = {
+                    "message.$" = "States.JsonMerge($.message, $.overrides, false)"
+                  }
+
+                  Next = "PostItem"
+                }
+              } :
+              {}
+            ),
+
+            {
+
+              DontParseJSON = {
+                Type = "Pass"
+
+                Parameters = {
+                  "message" = {
+                    "body.$" = "$.message"
+                  }
+                }
+
+                Next = "PostItem"
               }
 
-              Next = "PostItem"
-            }
+              PostItem = {
+                Type = "Task"
 
-            PostItem = {
-              Type = "Task"
+                Resource = "arn:aws:states:::http:invoke"
 
-              Resource = "arn:aws:states:::http:invoke"
-
-              Parameters = {
-                Method      = "POST"
-                ApiEndpoint = "https://api.rollbar.com/api/1/item/"
-                Headers = {
-                  "Accept"       = "application/json"
-                  "Content-Type" = "application/json"
-                }
-                Authentication = {
-                  ConnectionArn = aws_cloudwatch_event_connection.this.arn
-                }
-                RequestBody = {
-                  data = {
-                    environment = var.environment
-                    level       = var.level
-                    body = {
-                      "message.$" = "$.message"
+                Parameters = {
+                  Method      = "POST"
+                  ApiEndpoint = "https://api.rollbar.com/api/1/item/"
+                  Headers = {
+                    "Accept"       = "application/json"
+                    "Content-Type" = "application/json"
+                  }
+                  Authentication = {
+                    ConnectionArn = aws_cloudwatch_event_connection.this.arn
+                  }
+                  RequestBody = {
+                    data = {
+                      environment = var.environment
+                      level       = var.level
+                      body = {
+                        "message.$" = "$.message"
+                      }
                     }
                   }
                 }
-              }
 
-              End = true
+                End = true
+              }
             }
-          }
+          )
         }
 
         End = true
