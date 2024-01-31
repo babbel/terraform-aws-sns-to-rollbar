@@ -7,10 +7,12 @@ EOS
 }
 
 variable "json_key" {
-  type = string
+  type    = string
+  default = "-"
 
   description = <<EOS
 If the message is JSON, this is the key to use to extract the message used as Rollbar item title.
+If the value is "-", the implementation will not attempt to parse the message as JSON.
 EOS
 }
 
