@@ -2,7 +2,7 @@
 
 resource "aws_sns_topic" "this" {
   name = var.name
-  tags = var.tags
+  tags = merge(var.default_tags, var.sns_topic_tags)
 }
 
 resource "aws_sns_topic_subscription" "sqs-queue" {
@@ -15,7 +15,7 @@ resource "aws_sns_topic_subscription" "sqs-queue" {
 
 resource "aws_sqs_queue" "this" {
   name = var.name
-  tags = var.tags
+  tags = merge(var.default_tags, var.sqs_queue_tags)
 }
 
 data "aws_iam_policy_document" "sqs-queue-consume" {
@@ -73,7 +73,7 @@ resource "aws_pipes_pipe" "this" {
     }
   }
 
-  tags = var.tags
+  tags = merge(var.default_tags, var.pipes_pipe_tags)
 
   depends_on = [
     aws_iam_role_policy.pipes-pipe-sqs-queue-consume,
@@ -84,7 +84,8 @@ resource "aws_pipes_pipe" "this" {
 resource "aws_iam_role" "pipes-pipe" {
   name               = "pipes-${var.name}"
   assume_role_policy = data.aws_iam_policy_document.pipes-assume-role.json
-  tags               = var.tags
+
+  tags = merge(var.default_tags, var.pipes_pipe_iam_role_tags)
 }
 
 data "aws_iam_policy_document" "pipes-assume-role" {
@@ -284,7 +285,7 @@ resource "aws_sfn_state_machine" "this" {
     })
   )
 
-  tags = var.tags
+  tags = merge(var.default_tags, var.sfn_state_machine_tags)
 }
 
 data "aws_iam_policy_document" "sfn-state-machine-start-execution" {
@@ -297,7 +298,8 @@ data "aws_iam_policy_document" "sfn-state-machine-start-execution" {
 resource "aws_iam_role" "sfn-state-machine" {
   name               = "step-function-${var.name}"
   assume_role_policy = data.aws_iam_policy_document.states.json
-  tags               = var.tags
+
+  tags = merge(var.default_tags, var.sfn_state_machine_iam_role_tags)
 }
 
 data "aws_iam_policy_document" "states" {

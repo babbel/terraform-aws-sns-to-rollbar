@@ -1,3 +1,12 @@
+variable "default_tags" {
+  type    = map(string)
+  default = {}
+
+  description = <<EOS
+Map of tags assigned to all AWS resources created by this module.
+EOS
+}
+
 variable "environment" {
   type = string
 
@@ -12,6 +21,7 @@ variable "json_key" {
 
   description = <<EOS
 If the message is JSON, this is the key to use to extract the message used as Rollbar item title.
+
 If the value is "-", the implementation will not attempt to parse the message as JSON.
 EOS
 }
@@ -32,6 +42,24 @@ The name used in all related AWS resources.
 EOS
 }
 
+variable "pipes_pipe_iam_role_tags" {
+  type    = map(string)
+  default = {}
+
+  description = <<EOS
+Map of tags assigned to the IAM role used by the Step Function.
+EOS
+}
+
+variable "pipes_pipe_tags" {
+  type    = map(string)
+  default = {}
+
+  description = <<EOS
+Map of tags assigned to the EventBridge Pipe.
+EOS
+}
+
 variable "rollbar_project_access_token" {
   type = object({
     access_token = string
@@ -42,11 +70,38 @@ The Rollbar project access token used to post items to Rollbar. It must the `pos
 EOS
 }
 
-variable "tags" {
+variable "sfn_state_machine_iam_role_tags" {
   type    = map(string)
   default = {}
 
   description = <<EOS
-Tags to apply to all AWS resources.
+Map of tags assigned to the IAM role used by the Step Function.
+EOS
+}
+
+variable "sfn_state_machine_tags" {
+  type    = map(string)
+  default = {}
+
+  description = <<EOS
+Map of tags assigned to the Step Function.
+EOS
+}
+
+variable "sns_topic_tags" {
+  type    = map(string)
+  default = {}
+
+  description = <<EOS
+Map of tags assigned to the SNS topic.
+EOS
+}
+
+variable "sqs_queue_tags" {
+  type    = map(string)
+  default = {}
+
+  description = <<EOS
+Map of tags assigned to the SQS queue.
 EOS
 }
