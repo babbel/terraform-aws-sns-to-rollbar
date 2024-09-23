@@ -16,7 +16,7 @@ module "sns-to-rollbar-with-json-key" {
   environment = "test"
   level       = "debug"
 
-  tags = {
+  default_tags = {
     app = "some-service"
     env = "test"
   }
@@ -34,7 +34,7 @@ module "sns-to-rollbar-without-json-key" {
   environment = "test"
   level       = "debug"
 
-  tags = {
+  default_tags = {
     app = "some-service"
     env = "test"
   }
