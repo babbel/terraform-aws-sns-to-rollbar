@@ -19,10 +19,5 @@ module "sns-to-rollbar" {
 
   environment = "test"
   level      = "debug"
-
-  tags = {
-    app = "some-service"
-    env = "test"
-  }
 }
 ```
