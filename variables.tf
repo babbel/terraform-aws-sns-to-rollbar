@@ -46,7 +46,7 @@ variable "pipes_pipe_iam_role_tags" {
   default = {}
 
   description = <<EOS
-Map of tags assigned to the IAM role created for the EventBridge Pipe created by this module.
+Map of tags assigned to the IAM role created for the EventBridge Pipe created by this module. Tags in this map will override tags in `var.default_tags`.
 EOS
 }
 
@@ -55,7 +55,7 @@ variable "pipes_pipe_tags" {
   default = {}
 
   description = <<EOS
-Map of tags assigned to the EventBridge Pipe created by this module.
+Map of tags assigned to the EventBridge Pipe created by this module. Tags in this map will override tags in `var.default_tags`.
 EOS
 }
 
@@ -74,7 +74,7 @@ variable "sfn_state_machine_iam_role_tags" {
   default = {}
 
   description = <<EOS
-Map of tags assigned to the IAM role created for the Step Functions state machine created by this module.
+Map of tags assigned to the IAM role created for the Step Functions state machine created by this module. Tags in this map will override tags in `var.default_tags`.
 EOS
 }
 
@@ -83,7 +83,7 @@ variable "sfn_state_machine_tags" {
   default = {}
 
   description = <<EOS
-Map of tags assigned to the Step Functions state machine created by this module.
+Map of tags assigned to the Step Functions state machine created by this module. Tags in this map will override tags in `var.default_tags`.
 EOS
 }
 
@@ -92,7 +92,7 @@ variable "sns_topic_tags" {
   default = {}
 
   description = <<EOS
-Map of tags assigned to the SNS topic created by this module.
+Map of tags assigned to the SNS topic created by this module. Tags in this map will override tags in `var.default_tags`.
 EOS
 }
 
@@ -101,6 +101,6 @@ variable "sqs_queue_tags" {
   default = {}
 
   description = <<EOS
-Map of tags assigned to the SQS queue created by this module.
+Map of tags assigned to the SQS queue created by this module. Tags in this map will override tags in `var.default_tags`.
 EOS
 }
