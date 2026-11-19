@@ -86,6 +86,14 @@ resource "aws_iam_role" "pipes-pipe" {
   assume_role_policy = data.aws_iam_policy_document.pipes-assume-role.json
 
   tags = merge(var.default_tags, var.pipes_pipe_iam_role_tags)
+
+  # The permissions boundary is only set when the role is created, so that
+  # setting `var.iam_role_permissions_boundary` never changes an existing role.
+  permissions_boundary = var.iam_role_permissions_boundary
+
+  lifecycle {
+    ignore_changes = [permissions_boundary]
+  }
 }
 
 data "aws_iam_policy_document" "pipes-assume-role" {
@@ -300,6 +308,14 @@ resource "aws_iam_role" "sfn-state-machine" {
   assume_role_policy = data.aws_iam_policy_document.states.json
 
   tags = merge(var.default_tags, var.sfn_state_machine_iam_role_tags)
+
+  # The permissions boundary is only set when the role is created, so that
+  # setting `var.iam_role_permissions_boundary` never changes an existing role.
+  permissions_boundary = var.iam_role_permissions_boundary
+
+  lifecycle {
+    ignore_changes = [permissions_boundary]
+  }
 }
 
 data "aws_iam_policy_document" "states" {
