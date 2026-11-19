@@ -9,7 +9,7 @@ module "sns-to-rollbar-with-json-key" {
 
   json_key = "message"
 
-  iam_role_permissions_boundary = "arn:aws:iam::123456789012:policy/example-boundary"
+  iam_role_permissions_boundary_name = "example-boundary"
 
   rollbar_project_access_token = {
     access_token = "some-token"

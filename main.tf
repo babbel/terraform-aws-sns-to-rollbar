@@ -88,8 +88,8 @@ resource "aws_iam_role" "pipes-pipe" {
   tags = merge(var.default_tags, var.pipes_pipe_iam_role_tags)
 
   # The permissions boundary is only set when the role is created, so that
-  # setting `var.iam_role_permissions_boundary` never changes an existing role.
-  permissions_boundary = var.iam_role_permissions_boundary
+  # setting `var.iam_role_permissions_boundary_name` never changes an existing role.
+  permissions_boundary = local.iam_role_permissions_boundary
 
   lifecycle {
     ignore_changes = [permissions_boundary]
@@ -310,8 +310,8 @@ resource "aws_iam_role" "sfn-state-machine" {
   tags = merge(var.default_tags, var.sfn_state_machine_iam_role_tags)
 
   # The permissions boundary is only set when the role is created, so that
-  # setting `var.iam_role_permissions_boundary` never changes an existing role.
-  permissions_boundary = var.iam_role_permissions_boundary
+  # setting `var.iam_role_permissions_boundary_name` never changes an existing role.
+  permissions_boundary = local.iam_role_permissions_boundary
 
   lifecycle {
     ignore_changes = [permissions_boundary]
@@ -384,4 +384,22 @@ data "aws_iam_policy_document" "invoke-http-endpoint" {
     ]
     resources = [aws_cloudwatch_event_connection.this.secret_arn]
   }
+}
+
+# IAM permissions boundary
+
+data "aws_caller_identity" "this" {
+  count = var.iam_role_permissions_boundary_name != null ? 1 : 0
+}
+
+data "aws_partition" "this" {
+  count = var.iam_role_permissions_boundary_name != null ? 1 : 0
+}
+
+locals {
+  iam_role_permissions_boundary = (
+    var.iam_role_permissions_boundary_name != null ?
+    "arn:${data.aws_partition.this[0].partition}:iam::${data.aws_caller_identity.this[0].account_id}:policy/${var.iam_role_permissions_boundary_name}" :
+    null
+  )
 }
