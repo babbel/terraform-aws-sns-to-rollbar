@@ -15,6 +15,15 @@ The environment to use in the Rollbar item.
 EOS
 }
 
+variable "iam_role_permissions_boundary_name" {
+  type    = string
+  default = null
+
+  description = <<EOS
+Name of the IAM policy set as permissions boundary of the IAM roles this module creates. The policy must exist with this name in the roles' account; the module builds its ARN from that account. It is only set when a role is created: changing it later doesn't change an existing role.
+EOS
+}
+
 variable "json_key" {
   type    = string
   default = "-"
